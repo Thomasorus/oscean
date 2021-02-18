@@ -4,9 +4,9 @@
 
 // Defines memory allocations
 
-#define STRMEM 4096 * 96 //393216 ?
-#define CONMEM 500
-#define ITEMS 64
+#define STRMEM 4096 * 96
+#define CONMEM 1000
+#define ITEMS 128
 
 #define NAME "Thomasorus"
 #define DOMAIN "https://thomasorus.com/"
@@ -95,10 +95,10 @@ char *ccat(char *dst, char c) { int len = slen(dst); dst[len] = c; dst[len + 1] 
 //     fun(str + start, stop - start, data);
 // }
 
-void print(const char *str, size_t len, void *data)
-{
-    printf("%.*s\n", (int)len, str);
-}
+// void print(const char *str, size_t len, void *data)
+// {
+//     printf("%.*s\n", (int)len, str);
+// }
 
 /* clang-format on */
 
@@ -191,7 +191,7 @@ parse_content(FILE *fp, Block *block, Content *con)
 		if(len > 1024)
 			return errorid("Line is too long", line, len);
 		if(ssin(line, "====") >= 0) {
-			// printf("%s\n", line);
+			printf("%s\n", line);
 		}
 		if(ssin(line, "NAME: ") >= 0) {
 			t = maketerm(&con->terms[con->len++], push(block, sstr(line, buf, 6, len - 6)));
@@ -200,21 +200,17 @@ parse_content(FILE *fp, Block *block, Content *con)
 		}
 		if(ssin(line, "HOST: ") >= 0) {
 			t->host = push(block, sstr(line, buf, 6, len - 6));
-			// printf("%s\n", t->host);
 		}
 		if(ssin(line, "BREF: ") >= 0) {
 			t->bref = push(block, sstr(line, buf, 6, len - 6));
-			// printf("%s\n", t->bref);
 		}
 		if(ssin(line, "PRIV: ") >= 0) {
 			t->priv = push(block, sstr(line, buf, 6, len - 6));
-			// printf("%s\n", t->priv);
 		}
 		if(ssin(line, "BODY:") >= 0) {
 			catch_body = ssin(line, "BODY:") >= 0;
 		}
 		if(catch_body) {
-			// printf("%s\n", line);
 			t->body[t->body_len++] = push(block, line);
 		}
 		// printf("%s\n", t->body_len);
@@ -246,7 +242,8 @@ fpbodypart(FILE *f, Content *con, Term *t)
 {
 	int i;
 	for(i = 0; i < t->body_len; ++i) {
-		fprintf(f, t->body[i]);
+		printf("%s\n", t->name);
+		fprintf(f, "%s\n", t->body[i]);
 	}
 	// Parser goes here
 	// fptemplate(f, con, t, t->body[i]);
